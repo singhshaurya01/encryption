@@ -1,0 +1,46 @@
+## 🔬 Hybrid Image Encryption: AES-CBC + Logistic Map (IV-Seeded)
+
+### ✅ Advantages
+
+| Advantage                             | Description |
+|---------------------------------------|-------------|
+| **Dual-layer security**               | AES handles block-wise confusion; chaotic maps add pixel-wise diffusion. |
+| **IV sensitivity**                    | Logistic map seeded from `sha256(iv)` ensures that a wrong IV corrupts the entire image, unlike plain AES-CBC where only the first block is affected. |
+| **Resistance to known-plaintext attacks** | Even if attacker knows part of image and AES key, chaos-based XOR makes full recovery very difficult without exact IV. |
+| **Lightweight chaos generation**      | Logistic maps are simple to compute and add minimal computational overhead. |
+| **Enhanced entropy in ciphertext**    | XOR with chaotic stream decorrelates pixel patterns further than AES alone. |
+| **Flexibility**                       | Logistic parameters and initial seed (from IV) can be tuned to adjust unpredictability. |
+| **Compatibility**                    | Uses standard AES and NumPy-compatible formats, easy to integrate with existing systems. |
+
+---
+
+### ⚠️ Disadvantages
+
+| Disadvantage                          | Description |
+|---------------------------------------|-------------|
+| **Key & IV management complexity**    | Now both AES key and IV become critical, since IV affects the chaotic keystream. |
+| **No formal security proof**          | Logistic maps lack rigorous cryptographic proofs compared to AES. |
+| **Error propagation**                 | As with AES-CBC, a single bit error in ciphertext can corrupt subsequent blocks. |
+| **Image-dependent tuning**            | Optimal logistic parameters may vary with image resolution and format. |
+| **Possible redundancy**               | If chaotic map output is not carefully normalized, XOR operation may not significantly improve over AES alone. |
+
+---
+
+### 📌 Why This Method May Be Research Paper-Worthy
+
+- **Solves a Real Weakness**: CBC mode's main flaw—limited error propagation with wrong IV—is eliminated.
+- **Hybrid Cryptography Trend**: Modern cryptography increasingly explores combining deterministic and chaotic systems.
+- **Applicable in Multimedia Security**: Especially useful for sensitive visual data like medical images, satellite data, or confidential surveillance.
+- **Customizable**: The method offers tunability with chaotic parameters and supports upgrades like 2D maps or dynamic seeding.
+- **Lightweight**: The algorithm can be implemented with low memory and CPU overhead, making it suitable for embedded systems or IoT devices.
+
+---
+
+### 🧪 Possible Extensions
+
+- Replace logistic map with **2D or higher-dimensional chaotic systems** (Henon, Lorenz). (but these arent light weight)
+- Dynamically change logistic parameters based on metadata or pixel values.
+- Explore integration with **steganography** or **digital watermarking**.
+
+
+Making the IV critical is not inherently bad — in fact, in cryptography, it's often desirable when done correctly and securely. In your case, it adds a layer of IV-dependent chaos, which is intended behavior. The only requirement is to manage and protect the IV properly (e.g., include it with the encrypted file, perhaps encrypted itself or integrity-verified via HMAC).
