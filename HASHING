@@ -1,7 +1,7 @@
 ## HASHING
 hashing isn’t strictly necessary, but it's much better practice — especially in research or secure implementations. WITHOUT HASHING THE IV USING sha256, IMAGE IS STILL RESEMBLING THE ORIGINAL IMAGE LITTLE BIT IF WRONG IV USED.
 
-#### 🔒 Why Use `sha256(iv).digest()` Instead of key/IV Directly?
+#### 🔒 Why Use `sha256(iv).digest()` with key/IV Instead of key/IV Directly?
 
 Using a cryptographic hash of the IV (like `sha256(iv).digest()`) provides several **important advantages**, especially in encryption schemes that depend on **chaotic maps** or **keystreams**.
 
