@@ -1,0 +1,48 @@
+## HASHING
+hashing isn’t strictly necessary, but it's much better practice — especially in research or secure implementations. WITHOUT HASHING THE IV USING sha256, IMAGE IS STILL RESEMBLING THE ORIGINAL IMAGE LITTLE BIT IF WRONG IV USED.
+
+#### 🔒 Why Use `sha256(iv).digest()` Instead of key/IV Directly?
+
+Using a cryptographic hash of the IV (like `sha256(iv).digest()`) provides several **important advantages**, especially in encryption schemes that depend on **chaotic maps** or **keystreams**.
+
+---
+
+##### 🔑 1. **Better Diffusion (Small Change → Big Difference) MAIN THING**
+
+Hash functions like SHA-256 exhibit the **avalanche effect**:
+
+> A **small change in the IV** results in a **completely different hash output**.
+
+This greatly increases the **unpredictability** of the chaotic keystream — which is ideal for image encryption, where any repeating or patterned output is a weakness.
+
+---
+
+#### 🔐 2. **Longer, Uniform Output**
+
+A 16-byte IV becomes a **32-byte SHA-256 hash**, which:
+
+- Adds **more entropy** to the system.
+- Ensures a **uniform distribution of bytes**, important when generating seeds for logistic maps.
+- Allows precise mapping to the interval (0, 1), where most chaotic maps operate, while maintaining high resolution.
+
+---
+
+#### 🛡️ 3. **Hides Structure of the IV**
+
+If the IV was weak or had visible structure (e.g., `0000000000000001`), then:
+
+- Direct use might lead to **predictable seeds** and hence **predictable chaotic sequences**.
+- Security would be significantly weakened.
+
+By hashing the IV, the resulting seed is **pseudo-random** and **uniformly distributed**, hiding any weaknesses in the original IV.
+
+---
+
+### ✅ Summary Table
+
+| Using IV Directly         | Using `sha256(iv).digest()`         |
+|---------------------------|-------------------------------------|
+| Less entropy              | High entropy                        |
+| Poor diffusion            | Strong diffusion                    |
+| May leak IV structure     | Hides original IV completely        |
+| Less secure as seed       | Cryptographically stronger seed     |
